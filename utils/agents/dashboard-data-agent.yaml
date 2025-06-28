@@ -1,0 +1,90 @@
+name: DashboardDataAgent
+description: "Aggregates data for the front-end dashboard"
+version: "1.0.0"
+
+runtime:
+  type: daytona
+  config:
+    memory: 1Gi
+    timeout: 30s
+    environment: node16
+    cache:
+      type: redis
+      size: 1Gi
+
+linked_account:
+  owner_id: "user"
+  required_apps:
+    - AIRTABLE
+    - AKKIO
+
+triggers:
+  - type: http
+    path: /api/dashboard
+    method: GET
+
+connectors:
+  - type: airtable
+    base: ${AIRTABLE_BASE_ID}
+    table: "People"
+    api_key: ${AIRTABLE_API_KEY}
+  
+  - type: akkio
+    api_key: ${AKKIO_API_KEY}
+    model_id: ${AKKIO_MODEL_ID}
+  
+  - type: daytona_search
+    index_path: /data/search
+    index_name: slack_messages
+
+output_schema:
+  type: object
+  properties:
+    roster:
+      type: array
+      items:
+        $ref: "#/definitions/employee"
+    scores:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          score:
+            type: number
+          trend:
+            type: string
+          topChannel:
+            type: string
+    forecasts:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          nextMonth:
+            type: number
+
+definitions:
+  employee:
+    type: object
+    properties:
+      fullName:
+        type: string
+      location:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      team:
+        type: string
+      status:
+        type: string
+      metrics:
+        type: object
+        properties:
+          productivity:
+            type: number
+          engagement:
+            type: number
+          sentiment:
+            type: number 

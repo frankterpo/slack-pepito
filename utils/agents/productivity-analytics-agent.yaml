@@ -1,0 +1,58 @@
+name: ProductivityAnalyticsAgent
+description: "Analyzes Slack data and generates productivity metrics"
+version: "1.0.0"
+
+runtime:
+  type: daytona
+  config:
+    memory: 1Gi
+    timeout: 120s
+    environment: python3.9
+    gpu:
+      type: t4
+      count: 1
+
+linked_account:
+  owner_id: "user"
+  required_apps:
+    - AKKIO
+
+triggers:
+  - type: event
+    source: SlackIndexerAgent
+    event: indexing_complete
+  - type: schedule
+    cron: "0 3 * * *"  # Runs at 3 AM daily
+
+connectors:
+  - type: daytona_search
+    index_path: /data/search
+    index_name: slack_messages
+  
+  - type: akkio
+    api_key: ${AKKIO_API_KEY}
+    model_id: ${AKKIO_MODEL_ID}
+
+analytics:
+  metrics:
+    - name: message_count
+      type: count
+      window: daily
+    - name: sentiment_score
+      type: average
+      field: sentiment
+      window: daily
+    - name: engagement_score
+      type: weighted_average
+      fields:
+        - name: reactions_count
+          weight: 0.3
+        - name: replies_count
+          weight: 0.7
+      window: daily
+
+classification:
+  thresholds:
+    high: 0.7
+    medium: 0.3
+    low: 0.0 

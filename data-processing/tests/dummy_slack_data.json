@@ -1,0 +1,71 @@
+{
+  "messages": [
+    {
+      "user": "U123456",
+      "text": "Just finished the quarterly report",
+      "ts": "1624982400.000",
+      "channel": "C789012",
+      "reactions": [
+        "thumbsup",
+        "rocket"
+      ],
+      "thread_ts": null
+    },
+    {
+      "user": "U234567",
+      "text": "Great progress on the ML model!",
+      "ts": "1624983000.000",
+      "channel": "C789012",
+      "reactions": [
+        "brain",
+        "tada"
+      ],
+      "thread_ts": null
+    },
+    {
+      "user": "U345678",
+      "text": "Team meeting in 10 minutes",
+      "ts": "1624983600.000",
+      "channel": "C789012",
+      "reactions": [
+        "calendar",
+        "check"
+      ],
+      "thread_ts": null
+    }
+  ],
+  "channels": [
+    {
+      "id": "C789012",
+      "name": "general",
+      "is_channel": true
+    },
+    {
+      "id": "C890123",
+      "name": "random",
+      "is_channel": true
+    },
+    {
+      "id": "C901234",
+      "name": "tech-discussion",
+      "is_channel": true
+    }
+  ],
+  "users": [
+    {
+      "id": "U123456",
+      "name": "john.doe",
+      "real_name": "John Doe"
+    },
+    {
+      "id": "U234567",
+      "name": "jane.smith",
+      "real_name": "Jane Smith"
+    },
+    {
+      "id": "U345678",
+      "name": "bob.wilson",
+      "real_name": "Bob Wilson"
+    }
+  ]
+}

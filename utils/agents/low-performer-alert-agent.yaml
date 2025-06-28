@@ -1,0 +1,60 @@
+name: LowPerformerAlertAgent
+description: "Monitors productivity classifications and sends alerts"
+version: "1.0.0"
+
+runtime:
+  type: daytona
+  config:
+    memory: 512Mi
+    timeout: 60s
+    environment: node16
+
+linked_account:
+  owner_id: "user"
+  required_apps:
+    - AKKIO
+    - SLACK
+    - SMTP
+
+triggers:
+  - type: event
+    source: ProductivityAnalyticsAgent
+    event: classification_changed
+    conditions:
+      - field: old_status
+        value: medium
+      - field: new_status
+        value: low
+
+connectors:
+  - type: akkio
+    api_key: ${AKKIO_API_KEY}
+    model_id: ${AKKIO_MODEL_ID}
+  
+  - type: slack
+    token: ${SLACK_BOT_TOKEN}
+    scopes:
+      - chat:write
+      - im:write
+
+  - type: email
+    smtp_host: ${SMTP_HOST}
+    smtp_port: ${SMTP_PORT}
+    smtp_user: ${SMTP_USER}
+    smtp_pass: ${SMTP_PASS}
+    from_email: ${FROM_EMAIL}
+
+alerts:
+  slack:
+    template: "Hey @{user}, I noticed your activity dipped this week – is anything blocking you or any way I can help?"
+  email:
+    subject: "Check-in: Recent Activity Changes"
+    template: |
+      Hi {user.name},
+      
+      I noticed your activity patterns have changed recently. Is everything going okay?
+      
+      If you're facing any blockers or need support, please don't hesitate to reach out.
+      
+      Best regards,
+      Your Team 

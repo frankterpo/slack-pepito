@@ -111,6 +111,21 @@ The application uses the following main tables:
 - "What aspects of your work do you find most and least satisfying?"
 - "What changes could we make to improve your work experience?"
 
+## 📁 Project Structure
+
+This project is now fully consolidated with all components organized in a clean structure:
+
+```
+slack-spark-insights/
+├── src/                    # Main Next.js application
+├── docs/                   # Project documentation
+├── data-processing/        # AI scripts and test data
+├── utils/                  # Testing utilities and configs
+└── README.md              # This file
+```
+
+For detailed structure information, see [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md).
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -134,7 +149,7 @@ The application uses the following main tables:
 
 3. **Set up environment variables**
    ```bash
-   cp .env.local.example .env.local
+   cp env.template .env.local
    # Edit .env.local with your API keys
    ```
 
@@ -145,6 +160,21 @@ The application uses the following main tables:
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Testing the Integration
+
+You can test various components using the utilities:
+
+```bash
+# Test API endpoints
+python utils/test_apis.py
+
+# Test OAuth flows
+python utils/test_oauth.py
+
+# Process Slack data
+python data-processing/ai_insights_api.py
+```
 
 ### Building for Production
 

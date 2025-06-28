@@ -1,0 +1,56 @@
+name: SlackIndexerAgent
+description: "Crawls and indexes Slack messages across all channels"
+version: "1.0.0"
+
+runtime:
+  type: daytona
+  config:
+    memory: 1Gi
+    timeout: 300s
+    environment: python3.9
+    storage:
+      - name: search_index
+        size: 5Gi
+        path: /data/search
+
+linked_account:
+  owner_id: "user"
+  required_apps:
+    - SLACK
+
+triggers:
+  - type: schedule
+    cron: "0 2 * * *"  # Runs at 2 AM daily
+
+connectors:
+  - type: slack
+    token: ${SLACK_BOT_TOKEN}
+    scopes:
+      - channels:history
+      - channels:read
+      - groups:history
+      - groups:read
+      - im:history
+      - im:read
+  
+  - type: daytona_search
+    index_path: /data/search
+    index_name: slack_messages
+
+indexing:
+  fields:
+    - name: user_id
+      type: keyword
+    - name: channel_id
+      type: keyword
+    - name: message
+      type: text
+      analyzer: standard
+    - name: timestamp
+      type: date
+    - name: reactions
+      type: keyword
+    - name: thread_ts
+      type: keyword
+    - name: reply_count
+      type: integer 

@@ -1,0 +1,63 @@
+name: OnboardingFormAgent
+description: "Handles form submissions and writes data to spreadsheet store"
+version: "1.0.0"
+
+runtime:
+  type: daytona
+  config:
+    memory: 512Mi
+    timeout: 30s
+    environment: node16
+
+linked_account:
+  owner_id: "user"
+  required_apps:
+    - AIRTABLE
+
+triggers:
+  - type: http
+    path: /api/onboarding
+    method: POST
+
+connectors:
+  - type: airtable
+    base: ${AIRTABLE_BASE_ID}
+    table: "People"
+    api_key: ${AIRTABLE_API_KEY}
+
+schema:
+  type: object
+  properties:
+    fullName:
+      type: string
+    location:
+      type: string
+    jobTitle:
+      type: string
+    department:
+      type: string
+    team:
+      type: string
+    contract:
+      type: string
+    contractType:
+      type: string
+    noticePeriod:
+      type: string
+    status:
+      type: string
+    endDate:
+      type: string
+      format: date
+    totalSalary:
+      type: number
+    monthlySalary:
+      type: number
+    totalSalaryCurrency:
+      type: string
+    totalSalaryEUR:
+      type: number
+    monthlySalaryEUR:
+      type: number
+    notes:
+      type: string 
