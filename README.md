@@ -1,4 +1,4 @@
-# Slack Spark Insights 🚀
+# Slack Pepito 🚀
 
 An AI-powered team engagement analytics platform that helps managers identify performance patterns and generate personalized coaching questions based on Slack communication data.
 
